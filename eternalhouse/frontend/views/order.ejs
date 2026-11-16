@@ -1,0 +1,15 @@
+<%- include('partials/head', {nav: ''}) %>
+<div class="wrap">
+  <div class="page-h"><p class="eyebrow">Thank you</p><h1 class="gold-text"><%= o.status === 'paid' ? 'Order confirmed' : 'Order ' + o.status.replace('_',' ') %></h1><p class="muted mt-s"><%= o.order_no %> · a receipt was sent to <%= user.email %></p></div>
+  <div class="two">
+    <div><% items.forEach(function(it, i){ %><div class="line" data-i="<%= i %>"><a href="/product/<%= it.slug %>"><img src="/media/p/<%= it.product_id %>/1.svg" alt="" width="200" height="250"></a><div><span class="eyebrow"><%= it.brand %></span><div class="nm"><%= it.name %></div><span class="muted">Qty <%= it.qty %></span></div><div class="price p22"><%= inr(it.price_inr * it.qty) %></div></div><% }) %></div>
+    <aside class="sum"><h2>Totals</h2>
+      <div class="row"><span>Subtotal</span><span><%= inr(o.subtotal) %></span></div>
+      <% if (o.discount) { %><div class="row disc"><span><%= o.coupon %></span><span>− <%= inr(o.discount) %></span></div><% } %>
+      <div class="row"><span>Shipping</span><span><%= o.shipping ? inr(o.shipping) : 'Free' %></span></div>
+      <div class="row total"><span>Total</span><span><%= inr(o.total) %></span></div>
+      <p class="muted mt-s fs12"><%= o.ship_to.name %><br><%= o.ship_to.line1 %>, <%= o.ship_to.city %>, <%= o.ship_to.state %> <%= o.ship_to.pin %></p>
+    </aside>
+  </div>
+</div>
+<%- include('partials/foot') %>

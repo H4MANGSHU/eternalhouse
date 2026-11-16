@@ -1,0 +1,72 @@
+<%- include('partials/head', {home: true, nav: ''}) %>
+<section class="wrap hero">
+  <div>
+    <p class="eyebrow" data-reveal="fade">Autumn · Winter 2026</p>
+    <h1 class="mt-m" aria-label="Style never dies.">
+      <span class="ln"><span class="d0">Style</span></span>
+      <span class="ln"><span class="gold-text d1">never</span></span>
+      <span class="ln"><span class="d2">dies.</span></span>
+    </h1>
+    <p class="lead" data-reveal>Hundreds of pieces — bags, footwear, ready-to-wear and dresses — from ₹199 to ₹499, curated into one house that never goes out of style.</p>
+    <div class="cta" data-reveal data-i="2">
+      <a class="btn" href="/shop" data-magnetic>Shop the edit <span class="arr">→</span></a>
+      <a class="btn ghost" href="/lookbook" data-magnetic>The archive</a>
+    </div>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="ring"></div>
+    <% top.slice(0,3).forEach(function(p){ %><div class="hero-card"><img src="<%= p.images[0] %>" alt="" width="800" height="1000" fetchpriority="high" decoding="async"></div><% }) %>
+  </div>
+  <span class="scroll-cue" aria-hidden="true"></span>
+</section>
+<div class="marquee" aria-hidden="true"><div class="marquee-track">
+  <% for (let k = 0; k < 2; k++) { brands.forEach(function(b){ %><span><%= b %></span><% }) } %>
+</div></div>
+
+<section class="wrap defer pt0">
+  <div class="stats">
+    <div class="stat" data-reveal><b data-count="<%= stats.products %>">0</b><span>Pieces</span></div>
+    <div class="stat" data-reveal data-i="1"><b data-count="<%= stats.brands %>">0</b><span>Maisons</span></div>
+    <div class="stat" data-reveal data-i="2"><b data-count="<%= stats.looks %>">0</b><span>Archive icons</span></div>
+    <div class="stat" data-reveal data-i="3"><b data-count="20">0</b><span>% off · GENZ20</span></div>
+  </div>
+</section>
+
+<section class="sec wrap defer">
+  <div class="sec-h"><div><p class="eyebrow">Lyst Index · Q3 2026</p><h2>The most-ordered</h2></div><a class="link" href="/shop">View all</a></div>
+  <div class="rail">
+    <% top.forEach(function(p, i){ %><%- include('partials/card', {p: p, i: i, ranked: true}) %><% }) %>
+  </div>
+</section>
+
+<section class="sec wrap defer pt0">
+  <div class="sec-h"><div><p class="eyebrow">Departments</p><h2>Shop by house</h2></div></div>
+  <div class="cats">
+    <% CATS.forEach(function(c, i){ const n = (cats.find(x => x.category === c) || {n:0}).n; const pick = top[i] || top[0]; %>
+    <a class="cat" href="/shop?cat=<%= c %>" data-reveal="scale" data-i="<%= i %>"><img src="<%= pick.images[1] || pick.images[0] %>" alt="" width="800" height="1000" loading="lazy" decoding="async"><div><small><%= n %> pieces</small><h3><%= CAT_LABEL[c] %></h3></div></a>
+    <% }) %>
+  </div>
+</section>
+
+<section class="sec wrap defer pt0">
+  <div class="split">
+    <div class="art" data-reveal="left"><img src="<%= spot[0].images[2] || spot[0].images[0] %>" alt="" width="800" height="1000" loading="lazy" decoding="async"></div>
+    <div data-reveal="right">
+      <p class="eyebrow">Accessible luxury</p>
+      <h2>Icon energy, <span class="gold-text">₹199 – ₹499</span></h2>
+      <p class="muted lead2">From Vans to Coach to COS — the season’s breakout pieces without the couture price tag.</p>
+      <a class="btn" href="/shop?sort=price_asc&price=u10" data-magnetic>Shop under ₹10k <span class="arr">→</span></a>
+    </div>
+  </div>
+  <div class="grid mt-l">
+    <% spot.forEach(function(p, i){ %><%- include('partials/card', {p: p, i: i + 4}) %><% }) %>
+  </div>
+</section>
+
+<section class="sec wrap defer pt0">
+  <div class="sec-h"><div><p class="eyebrow">The archive</p><h2>Moments that made fashion</h2></div><a class="link" href="/lookbook">Open archive</a></div>
+  <div class="look-grid">
+    <% looks.forEach(function(l, i){ %><div class="look" data-reveal="scale" data-i="<%= i %>"><img src="/media/l/<%= l.id %>.svg" alt="<%= l.title %>" width="800" height="1000" loading="lazy" decoding="async"><div class="cap"><%= l.designer %> · <%= l.year %></div></div><% }) %>
+  </div>
+</section>
+<%- include('partials/foot') %>

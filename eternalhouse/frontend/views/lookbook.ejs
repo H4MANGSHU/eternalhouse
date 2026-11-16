@@ -1,0 +1,11 @@
+<%- include('partials/head', {nav: 'look'}) %>
+<div class="wrap">
+  <div class="page-h"><p class="eyebrow">Editorial reference</p><h1>The archive</h1><p class="muted mt-s w52">Fifty looks that defined fashion. Reference only — not for sale.</p></div>
+  <div class="look-grid pb-l pt-l">
+    <% looks.forEach(function(l, i){ %>
+    <div class="look" data-reveal="scale" data-i="<%= i % 6 %>"><img src="/media/l/<%= l.id %>.svg" alt="<%= l.title %>" width="800" height="1000" loading="lazy" decoding="async">
+      <div class="cap"><%= l.note %><br><a href="<%= l.link %>" target="_blank" rel="noopener noreferrer"><%= l.source %> ↗</a></div></div>
+    <% }) %>
+  </div>
+</div>
+<%- include('partials/foot') %>

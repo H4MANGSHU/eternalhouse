@@ -1,0 +1,15 @@
+<% const im = p.images || []; %>
+<article class="card" data-reveal data-i="<%= (i || 0) % 6 %>">
+  <div class="ph">
+    <a href="/product/<%= p.slug %>" aria-label="<%= p.brand %> <%= p.name %>">
+      <img src="<%= im[0] %>" alt="<%= p.brand %> <%= p.name %>" width="800" height="1000" <%= (i || 0) < 4 ? 'fetchpriority=high' : 'loading=lazy' %> decoding="async">
+      <% if (im[1]) { %><img src="<%= im[1] %>" alt="" width="800" height="1000" loading="lazy" decoding="async"><% } %>
+    </a>
+    <% if (p.stock < 1) { %><span class="tag low">Sold out</span><% } else if (p.stock <= 5) { %><span class="tag low">Only <%= p.stock %> left</span><% } else if (p.rank <= 10) { %><span class="tag">Most-ordered</span><% } %>
+    <% if (typeof ranked !== 'undefined' && ranked) { %><span class="rank"><%= String(p.rank).padStart(2, '0') %></span><% } %>
+    <% if (p.stock > 0) { %><button class="btn quick" data-add="<%= p.id %>" type="button">Add to bag</button><% } %>
+  </div>
+  <a class="meta" href="/product/<%= p.slug %>">
+    <span class="brand"><%= p.brand %></span><span class="nm"><%= p.name %></span><span class="pr"><%= inr(p.price_inr) %></span>
+  </a>
+</article>

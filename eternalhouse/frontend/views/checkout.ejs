@@ -1,0 +1,24 @@
+<%- include('partials/head', {nav: ''}) %>
+<div class="wrap">
+  <div class="page-h"><p class="eyebrow">Secure checkout</p><h1>Delivery</h1></div>
+  <div class="two">
+    <form id="checkout-form" class="form" novalidate>
+      <label class="full">Full name<input class="field" name="name" required autocomplete="name" value="<%= user.name %>"></label>
+      <label>Phone<input class="field" name="phone" required autocomplete="tel" inputmode="tel"></label>
+      <label>PIN code<input class="field" name="pin" required inputmode="numeric" maxlength="6" autocomplete="postal-code"></label>
+      <label class="full">Address<input class="field" name="line1" required autocomplete="street-address"></label>
+      <label>City<input class="field" name="city" required autocomplete="address-level2"></label>
+      <label>State<input class="field" name="state" required autocomplete="address-level1"></label>
+      <p class="notice full"><%= cfg.paymentMode === 'cashfree' ? 'You will pay securely with Cashfree (UPI, cards, netbanking).' : 'Test mode: no Cashfree keys configured, payment is simulated.' %></p>
+      <button class="btn block full" type="submit" data-magnetic>Pay <%= inr(t.total) %></button>
+    </form>
+    <aside class="sum">
+      <h2>Your order</h2>
+      <% items.forEach(function(it){ %><div class="row"><span><%= it.name %> × <%= it.qty %></span><span><%= inr(it.price * it.qty) %></span></div><% }) %>
+      <% if (t.discount) { %><div class="row disc"><span>GENZ20</span><span>− <%= inr(t.discount) %></span></div><% } %>
+      <div class="row"><span>Shipping</span><span><%= t.shipping ? inr(t.shipping) : 'Free' %></span></div>
+      <div class="row total"><span>Total</span><span><%= inr(t.total) %></span></div>
+    </aside>
+  </div>
+</div>
+<%- include('partials/foot') %>

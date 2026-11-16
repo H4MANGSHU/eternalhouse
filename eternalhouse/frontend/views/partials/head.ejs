@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="csrf" content="<%= csrf %>">
+<meta name="theme-color" content="#0a0908">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<title><%= title %></title>
+<meta name="description" content="EternalHouse — Style Never Dies. Bags, footwear, ready-to-wear and dresses from ₹199 to ₹499.">
+<link rel="stylesheet" href="/css/app.css?v=<%= v %>">
+<script src="/js/app.js?v=<%= v %>" defer></script>
+</head>
+<body>
+<% if (typeof home !== 'undefined' && home) { %><div class="curtain" aria-hidden="true"><span>ETERNALHOUSE</span></div><% } %>
+<div class="top-bar">Free shipping over ₹999 · Use code <b>GENZ20</b> for 20% off</div>
+<header class="hdr">
+  <div class="wrap hdr-in">
+    <nav class="nav" aria-label="Primary" id="nav">
+      <a href="/shop" <%- (typeof nav !== 'undefined' && nav === 'shop') ? 'aria-current="page"' : '' %>>Shop</a>
+      <a href="/shop?cat=Accessory">Accessories</a>
+      <a href="/shop?cat=Footwear">Footwear</a>
+      <a href="/lookbook" <%- (typeof nav !== 'undefined' && nav === 'look') ? 'aria-current="page"' : '' %>>Archive</a>
+    </nav>
+    <button class="burger" aria-label="Menu" aria-controls="nav" aria-expanded="false"><i></i><i></i></button>
+    <a class="logo" href="/" aria-label="EternalHouse home">ETERNAL<b>HOUSE</b></a>
+    <div class="hdr-r">
+      <% if (user) { %>
+        <% if (user.role === 'admin') { %><a class="hide-s" href="/admin">Admin</a><% } %>
+        <a class="hide-s" href="/orders"><% if (user.picture) { %><img class="avatar" src="<%= user.picture %>" alt="" referrerpolicy="no-referrer"><% } else { %><%= user.name.split(' ')[0] || 'Account' %><% } %></a>
+        <form method="post" action="/auth/logout" class="hide-s"><input type="hidden" name="_csrf" value="<%= csrf %>"><button type="submit" aria-label="Sign out">Out</button></form>
+      <% } else { %><a class="hide-s" href="/login">Sign in</a><% } %>
+      <a class="bag" href="/cart" aria-label="Shopping bag">Bag <span class="n"><%= locals.cartCount || 0 %></span></a>
+    </div>
+  </div>
+</header>
+<main id="main">

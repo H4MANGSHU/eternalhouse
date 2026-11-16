@@ -1,0 +1,34 @@
+<%- include('partials/head', {nav: ''}) %>
+<div class="wrap">
+  <div class="page-h"><p class="eyebrow">Your selection</p><h1>The bag</h1></div>
+  <div id="cart-root">
+  <% if (!items.length) { %>
+    <div class="empty"><h2>Your bag is empty</h2><p class="muted">Let’s fix that.</p><p class="mt-m"><a class="btn" href="/shop">Shop the edit</a></p></div>
+  <% } else { %>
+  <div class="two">
+    <div>
+      <% items.forEach(function(it, i){ %>
+      <div class="line" data-i="<%= i %>">
+        <a href="/product/<%= it.slug %>"><img src="/media/p/<%= it.id %>/1.svg" alt="" width="200" height="250" loading="lazy"></a>
+        <div><span class="eyebrow"><%= it.brand %></span><div class="nm"><%= it.name %></div><button class="rm" type="button" data-set="<%= it.id %>" data-qty="0">Remove</button></div>
+        <div class="tr"><div class="qty"><button type="button" data-set="<%= it.id %>" data-qty="<%= it.qty - 1 %>" aria-label="Less">−</button><output><%= it.qty %></output><button type="button" data-set="<%= it.id %>" data-qty="<%= Math.min(it.qty + 1, Math.min(10, it.stock)) %>" aria-label="More">+</button></div><div class="price p22 mt-s"><%= inr(it.price * it.qty) %></div></div>
+      </div>
+      <% }) %>
+    </div>
+    <aside class="sum">
+      <h2>Summary</h2>
+      <% const left = Math.max(0, FREE - (t.subtotal - t.discount)); %>
+      <p class="muted fs12"><%= left ? inr(left) + ' away from free shipping' : 'You’ve unlocked free shipping' %></p>
+      <progress class="fill" max="<%= FREE %>" value="<%= Math.min(FREE, t.subtotal - t.discount) %>"></progress>
+      <div class="row"><span>Subtotal</span><span><%= inr(t.subtotal) %></span></div>
+      <% if (t.discount) { %><div class="row disc"><span>GENZ20 · 20% off</span><span>− <%= inr(t.discount) %></span></div><% } %>
+      <div class="row"><span>Shipping</span><span><%= t.shipping ? inr(t.shipping) : 'Free' %></span></div>
+      <div class="row total"><span>Total</span><span><%= inr(t.total) %></span></div>
+      <form id="coupon-form" class="coupon"><input class="field" name="code" placeholder="Promo code" value="<%= t.coupon || '' %>" aria-label="Promo code" maxlength="20"><button class="btn ghost" type="submit">Apply</button></form>
+      <a class="btn block" href="/checkout" data-magnetic>Checkout <span class="arr">→</span></a>
+    </aside>
+  </div>
+  <% } %>
+  </div>
+</div>
+<%- include('partials/foot') %>

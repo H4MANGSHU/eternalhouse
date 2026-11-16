@@ -1,0 +1,29 @@
+{
+  "name": "eternalhouse",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EternalHouse — Style Never Dies",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "seed": "node scripts/seed.js",
+    "test": "node --test test/passwords.test.js test/mail.test.js",
+    "verify": "node scripts/verify.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "compression": "^1.8.2",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "ioredis": "^5.4.1",
+    "nodemailer": "^10.5.0",
+    "openid-client": "^5.7.1",
+    "pg": "^8.13.1"
+  }
+}

@@ -1,0 +1,43 @@
+<%- include('partials/head', {nav: 'shop'}) %>
+<% const im = p.images || []; %>
+<div class="wrap">
+  <p class="crumbs pt-m"><a href="/shop">Shop</a> / <a href="/shop?cat=<%= p.category %>"><%= CAT_LABEL[p.category] %></a> / <%= p.brand %></p>
+  <section class="pdp">
+    <div class="gal" data-reveal="fade">
+      <div class="thumbs" role="tablist" aria-label="Product media">
+        <% im.forEach(function(u, k){ %><button type="button" data-src="<%= u %>" data-alt="<%= p.brand %> <%= p.name %> — view <%= k+1 %>" aria-current="<%= k === 0 %>" aria-label="View <%= k+1 %>"><img src="<%= u %>" alt="" width="200" height="250" loading="lazy" decoding="async"></button><% }) %>
+        <% if (p.video) { %><button type="button" data-kind="video" aria-label="Play film" aria-current="false"><video src="<%= p.video %>" muted preload="metadata"></video></button><% } %>
+      </div>
+      <div class="stage">
+        <img class="main" src="<%= im[0] %>" alt="<%= p.brand %> <%= p.name %>" width="800" height="1000" fetchpriority="high">
+        <img class="swap" src="<%= im[0] %>" alt="" width="800" height="1000">
+        <% if (p.video) { %><video class="pv" src="<%= p.video %>" controls loop muted playsinline hidden></video><% } %>
+      </div>
+    </div>
+    <div data-reveal="right">
+      <p class="eyebrow"><%= p.brand %></p>
+      <h1><%= p.name %></h1>
+      <p class="price"><%= inr(p.price_inr) %> <span class="muted usd">· ≈ $<%= Number(p.price_usd).toLocaleString('en-US') %></span></p>
+      <p class="mt-s"><span class="stock <%= p.stock < 1 ? 'out' : p.stock <= 5 ? 'low' : '' %>" data-live-stock="<%= p.id %>"><%= p.stock < 1 ? 'Sold out' : p.stock <= 5 ? 'Only ' + p.stock + ' left' : 'In stock' %></span></p>
+      <% if (p.demand_signal) { %><p class="muted mt-s w52"><%= p.demand_signal %></p><% } %>
+      <div class="buy">
+        <% if (p.stock > 0) { %>
+          <div class="qty"><button type="button" data-step="-1" aria-label="Less">−</button><output id="qty">1</output><button type="button" data-step="1" aria-label="More">+</button></div>
+          <button class="btn" type="button" data-add="<%= p.id %>" data-useqty data-magnetic>Add to bag <span class="arr">→</span></button>
+        <% } else { %><button class="btn" disabled>Sold out</button><% } %>
+      </div>
+      <dl class="facts">
+        <div><dt>Category</dt><dd><%= p.category %><%= p.subcategory ? ' · ' + p.subcategory : '' %></dd></div>
+        <div><dt>For</dt><dd><%= p.gender %></dd></div>
+        <div><dt>Season</dt><dd><%= p.section %></dd></div>
+        <div><dt>Signal</dt><dd><%= p.evidence_type %> · <%= p.source %></dd></div>
+      </dl>
+      <p class="notice">Free shipping over ₹999. Use <b>GENZ20</b> for 20% off at checkout. Visuals shown are illustrative.</p>
+    </div>
+  </section>
+  <% if (related.length) { %>
+  <section class="sec defer pt0"><div class="sec-h"><div><p class="eyebrow">Complete the look</p><h2>You may also love</h2></div></div>
+    <div class="grid"><% related.forEach(function(r, i){ %><%- include('partials/card', {p: r, i: i + 4}) %><% }) %></div></section>
+  <% } %>
+</div>
+<%- include('partials/foot') %>

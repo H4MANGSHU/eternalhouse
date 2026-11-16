@@ -1,0 +1,33 @@
+<%- include('partials/head', {nav: 'shop'}) %>
+<%
+const qs = (o) => { const m = Object.assign({}, f, o); const p = new URLSearchParams(); Object.keys(m).forEach(k => { if (m[k] && !(k === 'sort' && m[k] === 'featured')) p.set(k, m[k]); }); const s = p.toString(); return '/shop' + (s ? '?' + s : ''); };
+%>
+<div class="wrap">
+  <div class="page-h"><p class="eyebrow">The collection</p><h1><%= f.cat ? CAT_LABEL[f.cat] : 'Everything' %> <span class="muted cnt"><%= total %> pieces</span></h1></div>
+  <form class="filters" method="get" action="/shop" role="search">
+    <input class="field" type="search" name="q" value="<%= f.q %>" placeholder="Search brand or piece" aria-label="Search">
+    <% if (f.cat) { %><input type="hidden" name="cat" value="<%= f.cat %>"><% } %>
+    <select class="field" name="gender" data-auto aria-label="For"><option value="">Everyone</option><% ['Women','Men','Unisex'].forEach(g => { %><option <%= f.gender===g?'selected':'' %>><%= g %></option><% }) %></select>
+    <select class="field" name="price" data-auto aria-label="Price range">
+      <option value="">₹199 – ₹499</option>
+      <% [['p1','₹199 – ₹299'],['p2','₹300 – ₹399'],['p3','₹400 – ₹499']].forEach(o => { %><option value="<%= o[0] %>" <%= f.price===o[0]?'selected':'' %>><%= o[1] %></option><% }) %>
+    </select>
+    <input class="field f-num" type="number" name="min" min="199" max="499" step="10" value="<%= f.min %>" placeholder="Min ₹" aria-label="Minimum price" data-auto >
+    <input class="field f-num" type="number" name="max" min="199" max="499" step="10" value="<%= f.max %>" placeholder="Max ₹" aria-label="Maximum price" data-auto >
+    <select class="field" name="brand" data-auto aria-label="Brand"><option value="">All brands</option><% brands.forEach(b => { %><option value="<%= b.brand %>" <%= f.brand===b.brand?'selected':'' %>><%= b.brand %> (<%= b.n %>)</option><% }) %></select>
+    <label class="chip chip-check <%= f.stock ? 'on' : '' %>"><input type="checkbox" name="stock" value="1" data-auto <%= f.stock ? 'checked' : '' %>>In stock</label>
+    <select class="field" name="sort" data-auto aria-label="Sort"><% [['featured','Most-ordered'],['price_asc','Price: low to high'],['price_desc','Price: high to low'],['new','Newest'],['name','Name A–Z']].forEach(o => { %><option value="<%= o[0] %>" <%= f.sort===o[0]?'selected':'' %>><%= o[1] %></option><% }) %></select>
+    <span class="chips">
+      <a class="chip <%= !f.cat ? 'on' : '' %>" href="<%= qs({cat: '', page: ''}) %>">All</a>
+      <% CATS.forEach(c => { %><a class="chip <%= f.cat===c ? 'on' : '' %>" href="<%= qs({cat: c, page: ''}) %>"><%= CAT_LABEL[c] %></a><% }) %>
+    </span>
+  </form>
+  <% if (f.q || f.gender || f.min !== '' || f.max !== '' || f.price || f.brand || f.stock || f.sort !== 'featured') { %><p class="muted reset-line"><%= total %> result<%= total === 1 ? '' : 's' %> · <a href="<%= f.cat ? '/shop?cat=' + f.cat : '/shop' %>">Reset filters</a></p><% } %>
+  <% if (!items.length) { %>
+    <div class="empty"><h2>Nothing matches</h2><p class="muted">Try clearing a filter.</p><p class="mt-m"><a class="btn" href="/shop">Reset</a></p></div>
+  <% } else { %>
+    <div class="grid pt-l"><% items.forEach(function(p, i){ %><%- include('partials/card', {p: p, i: i}) %><% }) %></div>
+    <% if (pages > 1) { %><nav class="pager" aria-label="Pages"><% for (let n = 1; n <= pages; n++) { %><a class="chip <%= n===page?'on':'' %>" href="<%= qs({page: n > 1 ? n : ''}) %>"><%= n %></a><% } %></nav><% } %>
+  <% } %>
+</div>
+<%- include('partials/foot') %>

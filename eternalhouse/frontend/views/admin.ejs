@@ -1,0 +1,48 @@
+<%- include('partials/head', {nav: ''}) %>
+<div class="wrap">
+  <div class="page-h"><p class="eyebrow">5.0 · Inventory &amp; Admin</p><h1>Control room</h1></div>
+  <nav class="tabs" aria-label="Admin sections">
+    <% [['reports','Reports'],['products','Products'],['orders','Orders'],['users','Users'],['emails','Emails']].forEach(function(t){ %><a class="chip <%= tab===t[0]?'on':'' %>" href="/admin?tab=<%= t[0] %>"><%= t[1] %></a><% }) %>
+  </nav>
+  <div class="pb-l ovx">
+  <% if (tab === 'reports') { %>
+    <div class="kpis">
+      <div class="kpi"><span class="eyebrow">Revenue</span><b><%= inr(data.rev.revenue) %></b></div>
+      <div class="kpi"><span class="eyebrow">Orders</span><b><%= data.rev.orders %></b></div>
+      <div class="kpi"><span class="eyebrow">Customers</span><b><%= data.users %></b></div>
+      <div class="kpi"><span class="eyebrow">Emails</span><b><%= data.mails.reduce((s, m) => s + m.n, 0) %></b></div>
+    </div>
+    <div class="split2">
+      <div><h3 class="serif h3">Top sellers</h3>
+        <table class="tbl"><thead><tr><th>Piece</th><th>Units</th><th>Revenue</th></tr></thead><tbody>
+        <% if (!data.top.length) { %><tr><td colspan="3" class="muted">No sales yet</td></tr><% } %>
+        <% data.top.forEach(function(r){ %><tr><td><%= r.brand %> — <%= r.name %></td><td><%= r.units %></td><td><%= inr(r.revenue) %></td></tr><% }) %></tbody></table></div>
+      <div><h3 class="serif h3">Low stock</h3>
+        <table class="tbl"><thead><tr><th>Piece</th><th>Stock</th></tr></thead><tbody>
+        <% data.low.forEach(function(r){ %><tr><td><%= r.brand %> — <%= r.name %></td><td><span class="badge cancelled"><%= r.stock %></span></td></tr><% }) %></tbody></table></div>
+    </div>
+    <h3 class="serif h3 mt-l">Orders by status</h3>
+    <p><% data.st.forEach(function(s){ %><span class="badge <%= s.status %>"><%= s.status.replace('_',' ') %> · <%= s.n %></span> <% }) %></p>
+  <% } else if (tab === 'products') { %>
+    <form method="get" class="mb-m"><input type="hidden" name="tab" value="products"><input class="field w-s" name="q" value="<%= data.q %>" placeholder="Search products" aria-label="Search"></form>
+    <table class="tbl"><thead><tr><th>Piece</th><th>Category</th><th>Price ₹</th><th>Stock</th><th>Live</th></tr></thead><tbody>
+    <% data.rows.forEach(function(r){ %><tr data-id="<%= r.id %>"><td><%= r.brand %> — <%= r.name %></td><td><%= r.category %></td>
+      <td><input class="field" type="number" min="199" max="499" name="price_inr" value="<%= r.price_inr %>" data-admin-product aria-label="Price"></td>
+      <td><input class="field" type="number" min="0" name="stock" value="<%= r.stock %>" data-admin-product aria-label="Stock"></td>
+      <td><input type="checkbox" name="active" <%= r.active ? 'checked' : '' %> data-admin-product aria-label="Active"></td></tr><% }) %></tbody></table>
+  <% } else if (tab === 'orders') { %>
+    <table class="tbl"><thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th></tr></thead><tbody>
+    <% if (!data.rows.length) { %><tr><td colspan="5" class="muted">No orders yet</td></tr><% } %>
+    <% data.rows.forEach(function(r){ %><tr><td><%= r.order_no %></td><td><%= r.email %></td><td><%= new Date(r.created_at).toLocaleString('en-IN') %></td><td><%= inr(r.total) %></td>
+      <td><% if (r.status === 'pending_payment') { %><span class="badge">pending payment</span><% } else { %><select class="field" data-admin-order="<%= r.id %>" aria-label="Status"><% ['paid','processing','shipped','delivered','cancelled'].forEach(function(s){ %><option <%= r.status===s?'selected':'' %>><%= s %></option><% }) %></select><% } %></td></tr><% }) %></tbody></table>
+  <% } else if (tab === 'users') { %>
+    <table class="tbl"><thead><tr><th>User</th><th>Email</th><th>Joined</th><th>Role</th></tr></thead><tbody>
+    <% data.rows.forEach(function(r){ %><tr><td><%= r.name %></td><td><%= r.email %></td><td><%= new Date(r.created_at).toLocaleDateString('en-IN') %></td>
+      <td><select class="field" data-admin-role="<%= r.id %>" aria-label="Role"><option <%= r.role==='customer'?'selected':'' %>>customer</option><option <%= r.role==='admin'?'selected':'' %>>admin</option></select></td></tr><% }) %></tbody></table>
+  <% } else { %>
+    <table class="tbl"><thead><tr><th>#</th><th>To</th><th>Subject</th><th>Kind</th><th>Status</th></tr></thead><tbody>
+    <% data.rows.forEach(function(r){ %><tr><td><%= r.id %></td><td><%= r.to_email %></td><td><%= r.subject %></td><td><%= r.kind %></td><td><span class="badge <%= r.status %>"><%= r.status %></span></td></tr><% }) %></tbody></table>
+  <% } %>
+  </div>
+</div>
+<%- include('partials/foot') %>
